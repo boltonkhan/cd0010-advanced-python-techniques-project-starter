@@ -16,18 +16,19 @@ import math
 
 
 class SupportedFormats:
-    """Encapsulate supported formatting
-    """
+    """Encapsulate supported formatting."""
+
     def __init__(self):
+        """Construct the object of `SupportedFormats` class."""
         self.supported_formats = {'csv', 'json'}
 
     def __str__(self):
+        """Return a string representation of `SupportedFormats` class."""
         return self.supported_formats_str
 
     @property
     def supported_formats_str(self):
-        """Return string representation of supported formats
-        """
+        """Return string representation of supported formats."""
         str_f = ''
         for i, f in enumerate(self.supported_formats):
             if i < len(self.supported_formats) - 1:
@@ -38,7 +39,7 @@ class SupportedFormats:
 
 
 def serialize(approaches, format):
-    """Prepare data to write to the file with proper formating
+    """Prepare data to write to the file with proper formating.
 
     :param approaches: An iterable of `CloseApproach` objects.
     :param format: (str). Supported formating: 'csv', 'json'.
@@ -85,10 +86,11 @@ def serialize(approaches, format):
         return neo_model
 
     def get_ca_model(app):
-        """Return an representation of `CloseApproach` object to write it into a file
+        """Return an representation of `CloseApproach` object to write it into a file.
 
         param app: A `CloseApproach` objects.
-        return dict: A representation of `CloseApproach` object."""
+        return dict: A representation of `CloseApproach` object.
+        """
         ca_model = {
             'datetime_utc': app.time_str,
             'distance_au': app.distance,

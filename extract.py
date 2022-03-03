@@ -34,7 +34,7 @@ def load_neos(neo_csv_path):
     }
 
     def _is_empty(field):
-        """Helper to check if the given field is None or empty string
+        """Check if the given field is None or empty string.
 
         param: field (str) : value to check.
         returns: bool value.
@@ -42,7 +42,7 @@ def load_neos(neo_csv_path):
         return False if field is None or field != '' else True
 
     def _normalize_diameter(diameter):
-        """Helper to check if the given field is a float attribute
+        """Check if the given field is a float attribute.
 
         param: diameter (str) : value to check.
         returns: float or 'nan'.
@@ -53,7 +53,7 @@ def load_neos(neo_csv_path):
             return 'nan'
 
     def _normalize_hazardous(hazardous):
-        """Convert enum Y/N to bool value
+        """Convert enum Y/N to bool value.
 
         param: hazardous (str) : value to check.
         returns: bool.

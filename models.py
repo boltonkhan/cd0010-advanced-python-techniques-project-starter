@@ -33,6 +33,7 @@ class NearEarthObject:
     initialized to an empty collection, but eventually populated in the
     `NEODatabase` constructor.
     """
+
     def __init__(self, designation, name=None, diameter=None, hazardous =False):
         """Create a new `NearEarthObject`.
 
@@ -52,24 +53,24 @@ class NearEarthObject:
 
     @property
     def fullname(self):
-        """Returns a representation of the full name of this NEO."""
+        """Return a representation of the full name of this NEO."""
         return f"'{self.designation} {self.name}'"
 
     @property
     def _str_hazardous(self):
-        """Returns a human readable representation of 'hazardous' attribute use in __str__."""
+        """Return a human readable representation of 'hazardous' attribute use in __str__."""
         if self.hazardous:
             return "is"
         return "is not"
 
     def str_diameter(self):
-        """Returns a human readable representation of 'diameter' attribute use in __str__."""
+        """Return a human readable representation of 'diameter' attribute use in __str__."""
         if math.isnan(float(self.diameter)):
             return "an uknown diameter"
         return f"a diameter of {self.diameter: .3f} km"
 
     def __str__(self):
-        """Return `str(self)`."""
+        """Return `str(self)`, a string representation of `NearEarthObject`."""
         return f"A NearEarthObject {self.fullname} has {self.str_diameter} " \
             f"and {self._str_hazardous} potentially hazardous"
 
@@ -92,6 +93,7 @@ class CloseApproach:
     private attribute, but the referenced NEO is eventually replaced in the
     `NEODatabase` constructor.
     """
+
     def __init__(self, designation, time, distance, velocity):
         """Create a new `CloseApproach`.
 

@@ -39,6 +39,7 @@ class AttributeFilter:
     Concrete subclasses can override the `get` classmethod to provide custom
     behavior to fetch a desired attribute from the given `CloseApproach`.
     """
+
     def __init__(self, op, value):
         """Construct a new `AttributeFilter` from an binary predicate and a reference value.
 
@@ -70,61 +71,67 @@ class AttributeFilter:
         raise UnsupportedCriterionError
 
     def __repr__(self):
+        """Return string representation of `AttributeFilter` class."""
         return f"{self.__class__.__name__}(op=operator.{self.op.__name__}, value={self.value})"
 
 
 class DateFilter(AttributeFilter):
-    """Specific class for date filters
-    """
+    """Specific class for date filters."""
+
     @classmethod
     def get(cls, approach):
         """Get a date value from a close approach.
+
         param: A `CloseApproach` on which to evaluate this filter.
         return: datetime.date. Date of the close approach.
         """
         return approach.time.date()
 
 class DistanceFilter(AttributeFilter):
-    """Specific class for distances filters
-    """
+    """Specific class for distances filters."""
+
     @classmethod
     def get(cls, approach):
         """Get a distance value from a close approach.
+
         param: A `CloseApproach` on which to evaluate this filter.
-        return: float. Distance of a close approach
+        return: float. Distance of a close approach.
         """
         return approach.distance
 
 class VelocityFilter(AttributeFilter):
-    """Specific class for vwlocity filters
-    """
+    """Specific class for vwlocity filters."""
+
     @classmethod
     def get(cls, approach):
         """Get a velocity value from a close approach.
+
         param: A `CloseApproach` on which to evaluate this filter.
         return: float. Velocity of a close approach
         """
         return approach.velocity
 
 class DiameterFilter(AttributeFilter):
-    """Specific class for diameters filters
-    """
+    """Specific class for diameters filters."""
+
     @classmethod
     def get(cls, approach):
         """Get a diameter value from a close approach.
+
         param: A `CloseApproach` on which to evaluate this filter.
         return: float. Diameter of a close approach
         """
         return approach.neo.diameter
 
 class HazardousFilter(AttributeFilter):
-    """Specific class for date hazardous
-    """
+    """Specific class for date hazardous."""
+
     @classmethod
     def get(cls, approach):
         """Get a hazardous value from a close approach.
+
         param: A `CloseApproach` on which to evaluate this filter.
-        return: bool. Is the close approach validated as hazardous
+        return: bool. Is the close approach validated as hazardous.
         """
         return approach.neo.hazardous
 
