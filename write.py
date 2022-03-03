@@ -1,14 +1,12 @@
 """Write a stream of close approaches to CSV or to JSON.
 
-This module exports two functions: `write_to_csv` and `write_to_json`, each of
-which accept an `results` stream of close approaches and a path to which to
-write the data.
+This module exports two functions: `write_to_csv` and `write_to_json`,
+each of which accept an `results` stream of close approaches
+and a path to which to write the data.
 
 These functions are invoked by the main module with the output of the `limit`
-function and the filename supplied by the user at the command line. The file's
-extension determines which of these functions is used.
-
-You'll edit this file in Part 4.
+function and the filename supplied by the user at the command line.
+The file's extension determines which of these functions is used.
 """
 import csv
 import json
@@ -53,7 +51,7 @@ def serialize(approaches, format):
     result = []
 
     def get_neo_model(app, format):
-        """Return an representation of `NEO` object to write it into a file on the specified format.
+        """Return an representation of `NEO` for specified file type.
 
         param app: A `CloseApproach` objects.
         param format: (str). Supported formating: 'csv', 'json'.
@@ -63,22 +61,28 @@ def serialize(approaches, format):
 
         if format == 'csv':
             neo_model = {
-                'neo' : {
+                'neo': {
                     'designation': app.neo.designation,
-                    'name': '' if app.neo.name is None else app.neo.name,
-                    'diameter_km': app.neo.diameter if(
-                        not math.isnan(float(app.neo.diameter))) else float('nan'),
-                    'potentially_hazardous': 'True' if app.neo.hazardous else 'False'
+                    'name': ''
+                            if app.neo.name is None else app.neo.name,
+                    'diameter_km': app.neo.diameter
+                            if not math.isnan(float(app.neo.diameter))
+                            else float('nan'),
+                    'potentially_hazardous': 'True'
+                            if app.neo.hazardous
+                            else 'False'
                 }
             }
 
         if format == 'json':
             neo_model = {
-                'neo' : {
+                'neo': {
                     'designation': app.neo.designation,
-                    'name': '' if app.neo.name is None else app.neo.name,
-                    'diameter_km': app.neo.diameter if (not math.isnan(float(app.neo.diameter)))
-                                                    else float('nan'),
+                    'name': ''
+                            if app.neo.name is None else app.neo.name,
+                    'diameter_km': app.neo.diameter
+                            if not math.isnan(float(app.neo.diameter))
+                            else float('nan'),
                     'potentially_hazardous': app.neo.hazardous
                 }
             }
@@ -86,7 +90,7 @@ def serialize(approaches, format):
         return neo_model
 
     def get_ca_model(app):
-        """Return an representation of `CloseApproach` object to write it into a file.
+        """Return an representation of `CloseApproach`.
 
         param app: A `CloseApproach` objects.
         return dict: A representation of `CloseApproach` object.
@@ -98,14 +102,14 @@ def serialize(approaches, format):
             }
         return ca_model
 
-    #Formatting for csv file
+    # Formatting for csv file
     if format.lower() == 'csv':
         for app in approaches:
 
-            row = {**get_neo_model(app,'csv')['neo'], **get_ca_model(app)}
+            row = {**get_neo_model(app, 'csv')['neo'], **get_ca_model(app)}
             result.append(row)
 
-    #formatting for json file
+    # Formatting for json file
     if format.lower() == 'json':
         for app in approaches:
             row = {**get_ca_model(app), **get_neo_model(app, 'json')}
@@ -117,12 +121,8 @@ def serialize(approaches, format):
 def write_to_csv(results, filename):
     """Write an iterable of `CloseApproach` objects to a CSV file.
 
-    The precise output specification is in `README.md`. Roughly, each output row
-    corresponds to the information in a single close approach from the `results`
-    stream and its associated near-Earth object.
-
     :param results: An iterable of `CloseApproach` objects.
-    :param filename: A Path-like object pointing to where the data should be saved.
+    :param filename: A Path-like object, path to data file.
     """
     fieldnames = (
         'datetime_utc', 'distance_au', 'velocity_km_s',
@@ -140,13 +140,8 @@ def write_to_csv(results, filename):
 def write_to_json(results, filename):
     """Write an iterable of `CloseApproach` objects to a JSON file.
 
-    The precise output specification is in `README.md`. Roughly, the output is a
-    list containing dictionaries, each mapping `CloseApproach` attributes to
-    their values and the 'neo' key mapping to a dictionary of the associated
-    NEO's attributes.
-
     :param results: An iterable of `CloseApproach` objects.
-    :param filename: A Path-like object pointing to where the data should be saved.
+    :param filename: A Path-like object, path to data file.
     """
     res = serialize(results, 'json')
     with open(filename, 'w', encoding='utf-8') as file:
