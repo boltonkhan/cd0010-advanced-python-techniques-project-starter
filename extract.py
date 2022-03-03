@@ -14,6 +14,7 @@ You'll edit this file in Task 2.
 """
 import csv
 import json
+import math
 
 from models import NearEarthObject, CloseApproach
 
@@ -24,8 +25,63 @@ def load_neos(neo_csv_path):
     :param neo_csv_path: A path to a CSV file containing data about near-Earth objects.
     :return: A collection of `NearEarthObject`s.
     """
-    # TODO: Load NEO data from the given CSV file.
-    return ()
+    neos = []
+
+    csv_fields = {
+        "designation": 3, 
+        "name": 4, 
+        "diameter": 15, 
+        "hazardous": 7
+    }
+
+    def _is_empty(field):
+        """Check if the given field is None or empty string
+    
+        param: field (str) : value to check.
+        returns: bool value.
+        """
+        return False if field is None or field != '' else True
+
+    def _normalize_diameter(diameter):
+        """Check if the given field is a float attribute
+            
+        param: diameter (str) : value to check.
+        returns: float or 'nan'.
+        """
+        try:
+           return float(diameter)
+        except ValueError:
+           return 'nan'
+
+    def _normalize_hazardous(hazardous):
+        """Convert enum Y/N to bool value
+
+        param: hazardous (str) : value to check.
+        returns: bool.
+        """
+        if hazardous.upper() == 'Y':
+            return True
+        return False
+
+    with open(neo_csv_path, 'r', encoding='utf-8') as file:
+        reader = csv.reader(file)
+
+        for i, row in enumerate(reader):
+            if i:
+
+                des = row[csv_fields["designation"]]
+                if _is_empty(des):
+                    continue
+
+                name= None if row[csv_fields["name"]] == '' else row[csv_fields["name"]]
+                diam=_normalize_diameter(row[csv_fields["diameter"]])
+                haz= _normalize_hazardous(row[csv_fields["hazardous"]])
+                
+                neo = NearEarthObject(des, name, diam, haz)
+
+                neos.append(neo)
+
+    return neos
 
 
 def load_approaches(cad_json_path):
@@ -35,4 +91,25 @@ def load_approaches(cad_json_path):
     :return: A collection of `CloseApproach`es.
     """
     # TODO: Load close approach data from the given JSON file.
-    return ()
+    app_vals = {
+        'designation': 0, 
+        'time': 3, 
+        'distance': 4, 
+        'velocity': 7
+        }
+
+    close_approaches = []
+
+    with open(cad_json_path, 'r', encoding='utf-8') as file:
+        reader = json.load(file)
+
+        for app in reader['data']:
+
+            des = app[app_vals["designation"]].strip()
+            time = app[app_vals["time"]]
+            distance = app[app_vals["distance"]].strip()
+            velocity = app[app_vals["velocity"]].strip()
+            ca = CloseApproach(des, time, distance, velocity)
+            close_approaches.append(ca)
+
+    return close_approaches
