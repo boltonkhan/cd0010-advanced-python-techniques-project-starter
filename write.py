@@ -40,7 +40,7 @@ def serialize(approaches, format):
     """Prepare data to write to the file with proper formating
 
     :param approaches: An iterable of `CloseApproach` objects.
-    :param format: String. Supported formating: 'csv', 'json'    
+    :param format: (str). Supported formating: 'csv', 'json'.    
     """
     sp = SupportedFormats()
     sp.supported_formats = {'csv', 'json'}
@@ -50,34 +50,60 @@ def serialize(approaches, format):
         
     result = []
 
+    def get_neo_model(app, format):
+        """Return an representation of `NEO` object to write it into a file on the specified format 
+        
+        param app: A `CloseApproach` objects.
+        param format: (str). Supported formating: 'csv', 'json'.  
+        return dict: A model of NEO object represends specified format
+        """
+        neo_model = {}
+
+        if format == 'csv':
+            neo_model = {   
+                'neo' : {
+                    'designation': app.neo.designation,
+                    'name': '' if app.neo.name is None else app.neo.name,
+                    'diameter_km': app.neo.diameter if not math.isnan(float(app.neo.diameter)) else float('nan'),
+                    'potentially_hazardous': 'True' if app.neo.hazardous else 'False'
+                }
+            }
+        
+        if format == 'json':
+            neo_model = {   
+                'neo' : {
+                    'designation': app.neo.designation,
+                    'name': '' if app.neo.name is None else app.neo.name,
+                    'diameter_km': app.neo.diameter if not math.isnan(float(app.neo.diameter)) else float('nan'),
+                    'potentially_hazardous': app.neo.hazardous
+                }
+            }
+
+        return neo_model
+
+    def get_ca_model(app):
+        """Return an representation of `CloseApproach` object to write it into a file
+        
+        param app: A `CloseApproach` objects.  
+        return dict: A representation of `CloseApproach` object"""
+        ca_model = {
+            'datetime_utc': app.time_str,
+            'distance_au': app.distance,
+            'velocity_km_s': app.velocity,
+            }
+        return ca_model
+
     #Formatting for csv file
     if format.lower() == 'csv':
         for app in approaches:
-            row = {
-                'datetime_utc': app.time_str,
-                'distance_au': app.distance,
-                'velocity_km_s': app.velocity,
-                'designation': app.neo.designation,
-                'name': '' if app.neo.name is None else app.neo.name,
-                'diameter_km': app.neo.diameter,
-                'potentially_hazardous': 'Y' if app.neo.hazardous else 'N'
-                }
+            
+            row = {**get_neo_model(app,'csv')['neo'], **get_ca_model(app)}
             result.append(row)
     
     #formatting for json file
     if format.lower() == 'json':
         for app in approaches:
-            row = {
-                'datetime_utc': app.time_str,
-                'distance_au': app.distance,
-                'velocity_km_s': app.velocity,
-                'neo':{
-                    'designation': app.neo.designation,
-                    'name': '' if app.neo.name is None else app.neo.name,
-                    'diameter_km': app.neo.diameter if not math.isnan(float(app.neo.diameter)) else 'NaN',
-                    'potentially_hazardous': 'Y' if app.neo.hazardous else 'N' 
-                    }
-                }
+            row = {**get_ca_model(app), **get_neo_model(app, 'json')}
             result.append(row)
 
     return result
