@@ -49,9 +49,9 @@ class NEODatabase:
                 self._name_to_neo[neo.name.lower()] = neo
 
         for app in self._approaches:
+            neo = self._designation_to_neo[app.designation.lower()]
             app.neo = self._designation_to_neo[app.designation.lower()]
             neo.approaches.append(app)
-
 
     def get_neo_by_designation(self, designation):
         """Find and return an NEO by its primary designation.
@@ -66,7 +66,6 @@ class NEODatabase:
             return None
         return neo
 
-
     def get_neo_by_name(self, name):
         """Find and return an NEO by its name.
 
@@ -79,7 +78,6 @@ class NEODatabase:
         if neo is None:
             return None
         return neo
-        
 
     def query(self, filters=()):
         """Query close approaches to generate those that match a collection of filters.
@@ -95,12 +93,11 @@ class NEODatabase:
         :param filters: A collection of filters capturing user-specified criteria.
         :return: A stream of matching `CloseApproach` objects.
         """
-        
         for approach in self._approaches:
 
             semaphor = True
-            for f in filters:
-                if not f(approach):
+            for a_filter in filters:
+                if not a_filter(approach):
                     semaphor = False
                     break
 

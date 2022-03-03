@@ -32,49 +32,52 @@ class SupportedFormats:
         for i, f in enumerate(self.supported_formats):
             if i < len(self.supported_formats) - 1:
                 str_f += f"'{f}' ,"
-            else: 
+            else:
                 str_f += f"'{f}'"
         return str_f
+
 
 def serialize(approaches, format):
     """Prepare data to write to the file with proper formating
 
     :param approaches: An iterable of `CloseApproach` objects.
-    :param format: (str). Supported formating: 'csv', 'json'.    
+    :param format: (str). Supported formating: 'csv', 'json'.
     """
     sp = SupportedFormats()
     sp.supported_formats = {'csv', 'json'}
     assert \
         format.lower() in sp.supported_formats, \
         f"Unsupported format. Supported formats: {sp}"
-        
+
     result = []
 
     def get_neo_model(app, format):
-        """Return an representation of `NEO` object to write it into a file on the specified format 
-        
+        """Return an representation of `NEO` object to write it into a file on the specified format.
+
         param app: A `CloseApproach` objects.
-        param format: (str). Supported formating: 'csv', 'json'.  
-        return dict: A model of NEO object represends specified format
+        param format: (str). Supported formating: 'csv', 'json'.
+        return dict: A model of NEO object represends specified format.
         """
         neo_model = {}
 
         if format == 'csv':
-            neo_model = {   
+            neo_model = {
                 'neo' : {
                     'designation': app.neo.designation,
                     'name': '' if app.neo.name is None else app.neo.name,
-                    'diameter_km': app.neo.diameter if not math.isnan(float(app.neo.diameter)) else float('nan'),
+                    'diameter_km': app.neo.diameter if(
+                        not math.isnan(float(app.neo.diameter))) else float('nan'),
                     'potentially_hazardous': 'True' if app.neo.hazardous else 'False'
                 }
             }
-        
+
         if format == 'json':
-            neo_model = {   
+            neo_model = {
                 'neo' : {
                     'designation': app.neo.designation,
                     'name': '' if app.neo.name is None else app.neo.name,
-                    'diameter_km': app.neo.diameter if not math.isnan(float(app.neo.diameter)) else float('nan'),
+                    'diameter_km': app.neo.diameter if (not math.isnan(float(app.neo.diameter)))
+                                                    else float('nan'),
                     'potentially_hazardous': app.neo.hazardous
                 }
             }
@@ -83,9 +86,9 @@ def serialize(approaches, format):
 
     def get_ca_model(app):
         """Return an representation of `CloseApproach` object to write it into a file
-        
-        param app: A `CloseApproach` objects.  
-        return dict: A representation of `CloseApproach` object"""
+
+        param app: A `CloseApproach` objects.
+        return dict: A representation of `CloseApproach` object."""
         ca_model = {
             'datetime_utc': app.time_str,
             'distance_au': app.distance,
@@ -96,10 +99,10 @@ def serialize(approaches, format):
     #Formatting for csv file
     if format.lower() == 'csv':
         for app in approaches:
-            
+
             row = {**get_neo_model(app,'csv')['neo'], **get_ca_model(app)}
             result.append(row)
-    
+
     #formatting for json file
     if format.lower() == 'json':
         for app in approaches:
@@ -123,9 +126,9 @@ def write_to_csv(results, filename):
         'datetime_utc', 'distance_au', 'velocity_km_s',
         'designation', 'name', 'diameter_km', 'potentially_hazardous'
     )
-    
+
     res = serialize(results, 'csv')
-    
+
     with open(filename, 'w', encoding='utf-8') as file:
         writer = csv.DictWriter(file, fieldnames=fieldnames)
         writer.writeheader()

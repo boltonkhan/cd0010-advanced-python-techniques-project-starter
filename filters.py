@@ -17,7 +17,6 @@ iterator.
 You'll edit this file in Tasks 3a and 3c.
 """
 import operator
-from typing import Iterator
 import itertools
 
 
@@ -167,47 +166,36 @@ def create_filters(
     :return: A collection of filters for use with `query`.
     """
     filters = []
-    
+
     if date is not None:
-        f = DateFilter(operator.eq, date)
-        filters.append(f)
-    
+        filters.append(DateFilter(operator.eq, date))
+
     if start_date is not None:
-        f = DateFilter(operator.ge, start_date)
-        filters.append(f)
+        filters.append(DateFilter(operator.ge, start_date))
 
     if end_date is not None:
-        f = DateFilter(operator.le, end_date)
-        filters.append(f)
+        filters.append(DateFilter(operator.le, end_date))
 
     if distance_min is not None:
-        f = DistanceFilter(operator.ge, float(distance_min))
-        filters.append(f)
+        filters.append(DistanceFilter(operator.ge, float(distance_min)))
 
     if distance_max is not None:
-        f = DistanceFilter(operator.le, float(distance_max))
-        filters.append(f)
+        filters.append(DistanceFilter(operator.le, float(distance_max)))
 
     if velocity_min is not None:
-        f = VelocityFilter(operator.ge, float(velocity_min))
-        filters.append(f)
+        filters.append(VelocityFilter(operator.ge, float(velocity_min)))
 
     if velocity_max is not None:
-        f = VelocityFilter(operator.le, float(velocity_max))
-        filters.append(f)
+        filters.append(VelocityFilter(operator.le, float(velocity_max)))
 
     if diameter_min is not None:
-        f = DiameterFilter(operator.ge, float(diameter_min))
-        filters.append(f)
+        filters.append(DiameterFilter(operator.ge, float(diameter_min)))
 
     if diameter_max is not None:
-        f = DiameterFilter(operator.le, float(diameter_max))
-        filters.append(f)
+        filters.append(DiameterFilter(operator.le, float(diameter_max)))
 
     if hazardous is not None:
-        f = HazardousFilter(operator.eq, bool(hazardous))
-        filters.append(f)
-
+        filters.append(HazardousFilter(operator.eq, bool(hazardous)))
 
     return filters
 
@@ -224,5 +212,4 @@ def limit(iterator, n=None):
     if n is None or n == 0:
         return iterator
 
-    else:
-        return itertools.islice(iterator, n)
+    return itertools.islice(iterator, n)

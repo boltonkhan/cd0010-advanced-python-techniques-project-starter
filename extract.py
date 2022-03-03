@@ -14,7 +14,6 @@ You'll edit this file in Task 2.
 """
 import csv
 import json
-import math
 
 from models import NearEarthObject, CloseApproach
 
@@ -28,30 +27,30 @@ def load_neos(neo_csv_path):
     neos = []
 
     csv_fields = {
-        "designation": 3, 
-        "name": 4, 
-        "diameter": 15, 
+        "designation": 3,
+        "name": 4,
+        "diameter": 15,
         "hazardous": 7
     }
 
     def _is_empty(field):
-        """Check if the given field is None or empty string
-    
+        """Helper to check if the given field is None or empty string
+
         param: field (str) : value to check.
         returns: bool value.
         """
         return False if field is None or field != '' else True
 
     def _normalize_diameter(diameter):
-        """Check if the given field is a float attribute
-            
+        """Helper to check if the given field is a float attribute
+
         param: diameter (str) : value to check.
         returns: float or 'nan'.
         """
         try:
-           return float(diameter)
+            return float(diameter)
         except ValueError:
-           return 'nan'
+            return 'nan'
 
     def _normalize_hazardous(hazardous):
         """Convert enum Y/N to bool value
@@ -75,8 +74,7 @@ def load_neos(neo_csv_path):
 
                 name= None if row[csv_fields["name"]] == '' else row[csv_fields["name"]]
                 diam=_normalize_diameter(row[csv_fields["diameter"]])
-                haz= _normalize_hazardous(row[csv_fields["hazardous"]])
-                
+                haz= _normalize_hazardous(row[csv_fields["hazardous"]])               
                 neo = NearEarthObject(des, name, diam, haz)
 
                 neos.append(neo)
@@ -90,11 +88,10 @@ def load_approaches(cad_json_path):
     :param cad_json_path: A path to a JSON file containing data about close approaches.
     :return: A collection of `CloseApproach`es.
     """
-    # TODO: Load close approach data from the given JSON file.
     app_vals = {
-        'designation': 0, 
-        'time': 3, 
-        'distance': 4, 
+        'designation': 0,
+        'time': 3,
+        'distance': 4,
         'velocity': 7
         }
 
@@ -109,7 +106,7 @@ def load_approaches(cad_json_path):
             time = app[app_vals["time"]]
             distance = app[app_vals["distance"]].strip()
             velocity = app[app_vals["velocity"]].strip()
-            ca = CloseApproach(des, time, distance, velocity)
-            close_approaches.append(ca)
+            close_app = CloseApproach(des, time, distance, velocity)
+            close_approaches.append(close_app)
 
     return close_approaches

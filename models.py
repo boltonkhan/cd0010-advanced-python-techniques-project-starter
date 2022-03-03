@@ -17,9 +17,8 @@ quirks of the data set, such as missing names and unknown diameters.
 
 You'll edit this file in Task 1.
 """
-from datetime import datetime
-from helpers import cd_to_datetime, datetime_to_str
 import math
+from helpers import cd_to_datetime, datetime_to_str
 
 
 class NearEarthObject:
@@ -43,16 +42,13 @@ class NearEarthObject:
         :param hazardous: (bool) Is Neo marked as potentially hazardous to Earth.
         """
         self.designation = designation
-        assert self.designation != None and self.designation != '', \
+        assert self.designation is not None and self.designation != '', \
            f"Attribute designation is required. Value: '{designation}' is not allowed"
-        self.name = None if name == None else name
+        self.name = None if name is None else name
         self.diameter = float('nan') if math.isnan(float(diameter)) else float(diameter)
         assert self.diameter > float(0) or math.isnan(float(diameter))
         self.hazardous = False if not hazardous else bool(hazardous)
         self.approaches = []
-
-    def update_approaches(self, approach):
-        self.approaches.append(approach)
 
     @property
     def fullname(self):
@@ -105,7 +101,7 @@ class CloseApproach:
         :param velocity: (float) Velocity relative to the approach body at close approach (km/s).
         """
         self.designation = designation
-        assert designation != None and designation != '', \
+        assert designation is not None and designation != '', \
            f"Attribute designation is required. Value: '{designation}' is not allowed"
 
         self.time = cd_to_datetime(time)
@@ -127,8 +123,6 @@ class CloseApproach:
     def time_str(self):
         """Return a formatted representation of this `CloseApproach`'s approach time."""
         return datetime_to_str(self.time)
-
-        # TODO: Use self.designation and self.name to build a fullname for this object. 
 
     def __str__(self):
         """Return `str(self)`."""
